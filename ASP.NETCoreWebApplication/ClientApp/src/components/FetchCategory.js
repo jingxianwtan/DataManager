@@ -23,11 +23,11 @@ export class FetchCategory extends Component {
                 </tr>
                 </thead>
                 <tbody>
-                {categories.map(categories => {
-                    const link = `/${parent}/${categories.name}`;
-                    return <tr key={categories.name}>
-                            <td><Link to={{pathname: link, state: {pName : parent, cName : categories.name, cid : categories.id}}}>{categories.name}</Link></td>
-                            <td>{categories.id}</td>
+                {categories.map(category => {
+                    const link = `/${parent}/${category.name}`;
+                    return <tr key={category.name}>
+                            <td><Link to={{pathname: link, state: {pName : parent, cName : category.name, cid : category.categoryId}}}>{category.name}</Link></td>
+                            <td>{category.categoryId}</td>
                         </tr>
                 })}
                 </tbody>
@@ -53,6 +53,7 @@ export class FetchCategory extends Component {
         const params = this.props.location.state;
         const response = await fetch('category?parent_cat=' + params.pid);
         const data = await response.json();
+        console.log(data);
         this.setState({ categories: data, loading: false, parent : params.pName });
     }
 }

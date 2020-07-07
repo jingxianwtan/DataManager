@@ -1,30 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ConsoleApp1
+namespace ASP.NETCoreWebApplication.Models
 {
-    public class Listing
+    public partial class Listing
     {
-        public string listingId { get; private set; }
-        public string userId{ get; private set; }
-        public string eventId { get; private set; }
-        public string createdTime { get; private set; }
-        public double price { get; private set; }
-        public int quantity { get; private set; }
-
-        public Dictionary<String, Transactions> transactions;
-
-        public Listing(string listingId, string userId, string eventId, string createdTime, double price, int quantity)
-        {
-            this.listingId = listingId;
-            this.userId = userId;
-            this.eventId = eventId;
-            this.createdTime = createdTime;
-            this.price = price;
-            this.quantity = quantity;
-            transactions = new Dictionary<string, Transactions>();
-        }
-        
-        
+        public int ListingId { get; set; }
+        public int UserId { get; set; }
+        public int EventId { get; set; }
+        public DateTime CreatedTime { get; set; }
+        public decimal Price { get; set; }
+        public int Quantity { get; set; }
     }
 }

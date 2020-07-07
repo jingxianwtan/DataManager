@@ -1,5 +1,6 @@
-﻿using System.Collections.Generic;
-using ConsoleApp1;
+﻿using System;
+using System.Collections.Generic;
+using ASP.NETCoreWebApplication.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ASP.NETCoreWebApplication.Controllers
@@ -8,12 +9,12 @@ namespace ASP.NETCoreWebApplication.Controllers
     [Route("[controller]")]
     public class CategoryController : Controller
     {
-        DAOImp dao = new DAOImp();
         // GET
         [HttpGet]
-        public IEnumerable<Node> Get([FromQuery(Name = "parent_cat")] string pid)
+        public IEnumerable<Category> Get([FromQuery(Name = "parent_cat")] string pid)
         {
-            return dao.GetACategoriesByPid(pid);
+            return DataManager.Instance().CategoryDict[pid];
+            /*throw  new NotImplementedException();*/
         }
     }
 }

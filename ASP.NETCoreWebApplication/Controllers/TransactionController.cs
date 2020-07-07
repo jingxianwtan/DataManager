@@ -1,5 +1,6 @@
-﻿using System.Collections.Generic;
-using ConsoleApp1;
+﻿using System;
+using System.Collections.Generic;
+using ASP.NETCoreWebApplication.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ASP.NETCoreWebApplication.Controllers
@@ -8,12 +9,12 @@ namespace ASP.NETCoreWebApplication.Controllers
     [Route("[controller]")]
     public class TransactionController : Controller
     {
-        DAOImp dao = new DAOImp();
         // GET
         [HttpGet]
-        public IEnumerable<Transactions> Get([FromQuery(Name = "listing")] string listId)
+        public IEnumerable<Transaction> Get([FromQuery(Name = "listing")] string lid)
         {
-            return dao.GetTransactionsByListing(listId);
+            return DataManager.Instance().TransactionDict[lid];
+            /*throw new NotImplementedException();*/
         }
     }
 }

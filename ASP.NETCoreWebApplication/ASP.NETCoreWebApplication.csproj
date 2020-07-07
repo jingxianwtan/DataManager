@@ -11,7 +11,10 @@
 
     <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="3.1.2" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.5" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.5" />
         <PackageReference Include="MySql.Data" Version="8.0.20" />
+        <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="3.1.1" />
     </ItemGroup>
 
     <ItemGroup>
@@ -19,10 +22,6 @@
         <Content Remove="$(SpaRoot)**" />
         <None Remove="$(SpaRoot)**" />
         <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\ConsoleApp1\ConsoleApp1.csproj" />
     </ItemGroup>
 
     <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">

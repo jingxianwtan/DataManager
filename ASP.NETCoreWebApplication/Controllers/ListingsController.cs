@@ -1,5 +1,6 @@
-﻿using System.Collections.Generic;
-using ConsoleApp1;
+﻿using System;
+using System.Collections.Generic;
+using ASP.NETCoreWebApplication.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ASP.NETCoreWebApplication.Controllers
@@ -8,12 +9,12 @@ namespace ASP.NETCoreWebApplication.Controllers
     [Route("[controller]")]
     public class ListingsController : Controller
     {
-        DAOImp dao = new DAOImp();
         // GET
         [HttpGet]
-        public IEnumerable<Listing> Get([FromQuery(Name = "event")] string eventId) // ?event=1
+        public IEnumerable<Listing> Get([FromQuery(Name = "event")] string eid) // ?event=1
         {
-            return dao.GetListingsOfEvent(eventId);
+            return DataManager.Instance().ListingDict[eid];
+            /*throw new NotImplementedException();*/
         }
     }
 }
