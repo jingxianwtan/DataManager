@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using ASP.NETCoreWebApplication.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,7 +12,14 @@ namespace ASP.NETCoreWebApplication.Controllers
         [HttpGet]
         public IEnumerable<Category> Get([FromQuery(Name = "parent_cat")] string pid)
         {
-            return DataManager.Instance().CategoryDict[pid];
+            if (DataManager.Instance().CategoryDict.ContainsKey(pid))
+            {
+                return DataManager.Instance().CategoryDict[pid];   
+            }
+            else
+            {
+                return new List<Category>();
+            }
             /*throw  new NotImplementedException();*/
         }
     }

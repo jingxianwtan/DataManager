@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace ASP.NETCoreWebApplication.Models
 {
-    public partial class Transaction
+    public class Transaction
     {
         public int TransactionId { get; set; }
         public int BuyerId { get; set; }

@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace ASP.NETCoreWebApplication.Models
 {
-    public partial class Listing
+    public class Listing
     {
         public int ListingId { get; set; }
         public int UserId { get; set; }

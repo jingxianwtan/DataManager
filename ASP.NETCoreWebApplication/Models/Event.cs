@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace ASP.NETCoreWebApplication.Models
 {
-    public partial class Event
+    public class Event
     {
         public int EventId { get; set; }
         public int CategoryId { get; set; }

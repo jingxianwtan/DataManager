@@ -1,6 +1,6 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.Extensions.Configuration;
 
 namespace ASP.NETCoreWebApplication.Models
 {
@@ -27,8 +27,11 @@ namespace ASP.NETCoreWebApplication.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseMySql("server=localhost;database=test_data;uid=root;pwd=1221", x => x.ServerVersion("8.0.20-mysql"));
+                var configuration = new ConfigurationBuilder()
+                    .AddJsonFile("appsettings.json")
+                    .Build();
+                optionsBuilder.UseMySql(configuration.GetConnectionString("string"),
+                    x => x.ServerVersion("8.0.20-mysql"));
             }
         }
 

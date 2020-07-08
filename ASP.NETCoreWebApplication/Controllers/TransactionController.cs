@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using ASP.NETCoreWebApplication.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,7 +12,14 @@ namespace ASP.NETCoreWebApplication.Controllers
         [HttpGet]
         public IEnumerable<Transaction> Get([FromQuery(Name = "listing")] string lid)
         {
-            return DataManager.Instance().TransactionDict[lid];
+            if (DataManager.Instance().TransactionDict.ContainsKey(lid))
+            {
+                return DataManager.Instance().TransactionDict[lid];   
+            }
+            else
+            {
+                return new List<Transaction>();
+            }
             /*throw new NotImplementedException();*/
         }
     }
