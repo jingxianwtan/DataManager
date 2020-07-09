@@ -55,7 +55,7 @@ export class FetchListings extends Component {
     async populateListings() {
         console.log("props: ", this.props);
         const params = this.props.location.state;
-        const response = await fetch('listings?event=' + params.eid); 
+        const response = await fetch('listing?event=' + params.eid); 
         const data = await response.json();
         this.setState({ listings: data, loading: false, pName : params.pName, cName: params.cName, eid : params.eid});
     }
