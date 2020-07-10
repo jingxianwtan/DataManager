@@ -32,8 +32,7 @@ namespace ASP.NETCoreWebApplication.Controllers
         {
             _context.Listing.Add(listing);
             await _context.SaveChangesAsync();
-
-            //return CreatedAtAction("GetTodoItem", new { id = todoItem.Id }, todoItem);
+            
             return CreatedAtAction("GetListings", new { id = listing.ListingId }, listing);
         }
     }
