@@ -29,14 +29,45 @@ const initializeFieldValues = (props) => {
 }
 
 const ListingForm = ({classes, ...props}) => {
+    
+    const validate = (fieldValues = values) => {
+        let temp = {}
+        if ('userId' in fieldValues) 
+            temp.userId = fieldValues.userId != "" ? "" : "This field is required."
+        if ('eventId' in fieldValues)
+            temp.eventId = fieldValues.eventId != "" ? "" : "This field is required."
+/*        if ('createdTime' in fieldValues) 
+            temp.createdTime = fieldValues.createdTime != "" ? "" : "This field is required."*/
+        if ('createdTime' in fieldValues) 
+            temp.createdTime = fieldValues.createdTime.match( /(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})/) ? "" : "Date format should be yyyy-mm-ddThh:mm:ss"
+        if ('price' in fieldValues) 
+            temp.price = fieldValues.price != "" && !isNaN(fieldValues.price)? "" : "This field should be digit only."
+        if ('quantity' in fieldValues) 
+            temp.quantity = fieldValues.quantity != "" && !isNaN(fieldValues.quantity) ? "" : "This field should be digit only."
+        setErrors({
+            ...temp
+        })
+        if (fieldValues == values) 
+            return Object.values(temp).every(x => x == "")
+    }
+    
     const {
         values,
         setValues,
+        errors,
+        setErrors,
         handleInputChange
-    } = useForm(initializeFieldValues(props))
+    } = useForm(initializeFieldValues(props), validate)
+    
+    const handleSubmit = e => {
+        e.preventDefault()
+        if(validate()) {
+            window.alert("validation succeeded")
+        }
+    }
     
     return (
-        <form autoComplete= "off" noValidate className = {classes.root}>
+        <form autoComplete= "off" noValidate className = {classes.root} onSubmit= {handleSubmit}>
             <Grid container>
                     <Grid item xs = {12} className={classes.smallMargin}>
                         <h1 id="addListing" >Add a Listing for this Event</h1>
@@ -54,6 +85,7 @@ const ListingForm = ({classes, ...props}) => {
                             label = "User Id"
                             value = {values.userId}
                             onChange = {handleInputChange}
+                            {...(errors.userId && {error: true, helperText: errors.userId})}
                         />
                         <TextField
                             name = "eventId"
@@ -61,6 +93,7 @@ const ListingForm = ({classes, ...props}) => {
                             label = "Event Id"
                             value = {values.eventId}
                             onChange = {handleInputChange}
+                            {...(errors.eventId && {error: true, helperText: errors.eventId})}
                         />
                         <TextField
                             name = "createdTime"
@@ -68,6 +101,7 @@ const ListingForm = ({classes, ...props}) => {
                             label = "Created Time"
                             value = {values.createdTime}
                             onChange = {handleInputChange}
+                            {...(errors.createdTime && {error: true, helperText: errors.createdTime})}
                         />
                         <TextField 
                             name = "price"
@@ -75,6 +109,7 @@ const ListingForm = ({classes, ...props}) => {
                             label = "Price"
                             value = {values.price}
                             onChange = {handleInputChange}
+                            {...(errors.price && {error: true, helperText: errors.price})}
                         />
                         <TextField
                             name = "quantity"
@@ -82,6 +117,7 @@ const ListingForm = ({classes, ...props}) => {
                             label = "Quantity"
                             value = {values.quantity}
                             onChange = {handleInputChange}
+                            {...(errors.quantity && {error: true, helperText: errors.quantity})}
                         />
                         <div>
                             <Button

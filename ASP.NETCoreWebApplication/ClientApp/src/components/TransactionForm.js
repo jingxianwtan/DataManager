@@ -30,13 +30,43 @@ const initializeedFieldValues = (props) => {
 }
 
 const TransactionForm = ({classes, ...props}) => {
+
+    const validate = (fieldValues = values) => {
+        let temp = {}
+        if ('buyerId' in fieldValues)
+            temp.buyerId = fieldValues.buyerId != "" ? "" : "This field is required."
+        if ('listingId' in fieldValues)
+            temp.listingId = fieldValues.listingId != "" ? "" : "This field is required."
+        if ('quantBought' in fieldValues)
+            temp.quantBought = fieldValues.quantBought != "" && !isNaN(fieldValues.quantBought)? "" : "This field should be digit only."
+        if ('sellerId' in fieldValues)
+            temp.sellerId = fieldValues.sellerId != "" ? "" : "This field is required."
+        if ('date' in fieldValues)
+            temp.date = fieldValues.date.match( /(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})/) ? "" : "Date format should be yyyy-mm-ddThh:mm:ss"
+        setErrors({
+            ...temp
+        })
+        if (fieldValues == values)
+            return Object.values(temp).every(x => x == "")
+    }
+    
     const {
         values,
         setValues,
+        errors,
+        setErrors,
         handleInputChange
-    } = useForm(initializeedFieldValues(props))
+    } = useForm(initializeedFieldValues(props), validate)
+
+    const handleSubmit = e => {
+        e.preventDefault()
+        if(validate()) {
+            window.alert("validation succeeded")
+        }
+    }
+    
     return (
-        <form autoComplete= "off" noValidate className = {classes.root}>
+        <form autoComplete= "off" noValidate className = {classes.root} onSubmit= {handleSubmit}>
             <Grid container>
                 <Grid item xs = {12} className={classes.smallMargin}>
                     <h1 id="addTransaction" > Add a Transactions for this Listing</h1>
@@ -54,6 +84,7 @@ const TransactionForm = ({classes, ...props}) => {
                         label = "Buyer Id"
                         value = {values.buyerId}
                         onChange = {handleInputChange}
+                        {...(errors.buyerId && {error: true, helperText: errors.buyerId})}
                     />
                     <TextField
                         name = "paymentId"
@@ -68,6 +99,7 @@ const TransactionForm = ({classes, ...props}) => {
                         label = "Listing Id"
                         value = {values.listingId}
                         onChange = {handleInputChange}
+                        {...(errors.listingId && {error: true, helperText: errors.listingId})}
                     />
                     <TextField
                         name = "quantBought"
@@ -75,6 +107,7 @@ const TransactionForm = ({classes, ...props}) => {
                         label = "Quantity Bought"
                         value = {values.quantBought}
                         onChange = {handleInputChange}
+                        {...(errors.quantBought && {error: true, helperText: errors.quantBought})}
                     />
                     <TextField
                         name = "sellerId"
@@ -82,6 +115,7 @@ const TransactionForm = ({classes, ...props}) => {
                         label = "Seller Id"
                         value = {values.sellerId}
                         onChange = {handleInputChange}
+                        {...(errors.sellerId && {error: true, helperText: errors.sellerId})}
                     />
                     <TextField
                         name = "date"
@@ -89,6 +123,7 @@ const TransactionForm = ({classes, ...props}) => {
                         label = "Date"
                         value = {values.date}
                         onChange = {handleInputChange}
+                        {...(errors.date && {error: true, helperText: errors.date})}
                     />
                     <Button
                         variant = "contained"
