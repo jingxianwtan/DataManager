@@ -39,7 +39,7 @@ export class FetchListings extends Component {
                         {listings.map(listing => {
                             const link = `/${parent}/${category}/${eid}/listings/${listing.listingId}/transactions`;
                             return <tr key={listing.listingId}>
-                                <td><Link to = {{pathname: link, state: {lid : listing.listingId}}}>{listing.listingId}</Link></td>
+                                <td><Link to = {{pathname: link, state: {lid : listing.listingId, sellerId: listing.userId}}}>{listing.listingId}</Link></td>
                                 <td>{listing.price}</td>
                                 <td>{listing.quantity}</td>
                                 <td>{listing.userId}</td>

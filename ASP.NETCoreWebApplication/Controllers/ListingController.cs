@@ -28,10 +28,11 @@ namespace ASP.NETCoreWebApplication.Controllers
 
         [HttpPost]
         [Route("api/create")]
-        public async Task<ActionResult<Listing>> PostTodoItem(Listing listing)
+        public async Task<ActionResult<Listing>> PostTodoItem([FromQuery(Name = "event")] string eid, Listing listing)
         {
             _context.Listing.Add(listing);
             await _context.SaveChangesAsync();
+            DataManager.Instance().ListingDict[eid].Add(listing);
             
             return CreatedAtAction("GetListings", new { id = listing.ListingId }, listing);
         }

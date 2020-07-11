@@ -6,7 +6,7 @@ const styles = theme => ({
     root: {
         '& .MuiTextField-root': {
             margin: theme.spacing(1),
-            width: 150,
+            width: 200,
         },
     },
     divider: {
@@ -19,7 +19,7 @@ const styles = theme => ({
 
 const initializeFieldValues = (props) => {
     return {
-        listingId: '',
+/*        listingId: '',*/
         userId: '',
         eventId: props.eventId,
         createdTime: '',
@@ -36,10 +36,8 @@ const ListingForm = ({classes, ...props}) => {
             temp.userId = fieldValues.userId != "" ? "" : "This field is required."
         if ('eventId' in fieldValues)
             temp.eventId = fieldValues.eventId != "" ? "" : "This field is required."
-/*        if ('createdTime' in fieldValues) 
-            temp.createdTime = fieldValues.createdTime != "" ? "" : "This field is required."*/
         if ('createdTime' in fieldValues) 
-            temp.createdTime = fieldValues.createdTime.match( /(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})/) ? "" : "Date format should be yyyy-mm-ddThh:mm:ss"
+            temp.createdTime = fieldValues.createdTime.match( /(\d{4})-(\d{2}|[01-12])-(\d{2})T(\d{2}):(\d{2}):(\d{2})/) ? "" : "Date format should be yyyy-mm-ddThh:mm:ss"
         if ('price' in fieldValues) 
             temp.price = fieldValues.price != "" && !isNaN(fieldValues.price)? "" : "This field should be digit only."
         if ('quantity' in fieldValues) 
@@ -62,7 +60,14 @@ const ListingForm = ({classes, ...props}) => {
     const handleSubmit = e => {
         e.preventDefault()
         if(validate()) {
-            window.alert("validation succeeded")
+            submitListing(values).then(res => {
+                console.log(res);
+                if (res.ok) {
+                    window.alert("New listing added");
+                } else {
+                    window.alert("Failed to add listing, status code: " + res.status);
+                }
+            })
         }
     }
     
@@ -72,13 +77,13 @@ const ListingForm = ({classes, ...props}) => {
                     <Grid item xs = {12} className={classes.smallMargin}>
                         <h1 id="addListing" >Add a Listing for this Event</h1>
                         <p>You can omit the Listing Id for new Listing.</p>
-                        <TextField
+{/*                        <TextField
                             name = "listingId"
                             variant = "outlined"
                             label = "Listing Id"
                             value = {values.listingId}
                             onChange = {handleInputChange}
-                        />
+                        />*/}
                         <TextField
                             name = "userId"
                             variant = "outlined"
@@ -139,6 +144,26 @@ const ListingForm = ({classes, ...props}) => {
             <Divider className={classes.divider} />
         </form>
     )
+}
+
+async function submitListing(values) {
+    const data = {
+/*        "ListingId": parseInt(values.listingId),*/
+        "UserId": parseInt(values.userId),
+        "EventId": parseInt(values.eventId),
+        "CreatedTime": values.createdTime,
+        "Price": parseFloat(values.price),
+        "Quantity": parseInt(values.quantity)
+    }
+    console.log(data);
+    const response = await fetch('Listing/api/create?event=' + values.eventId, {
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers: {
+            'Content-Type': 'application/json'
+        },
+    });
+    return response
 }
 
 export default withStyles(styles)(ListingForm);

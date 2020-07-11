@@ -27,10 +27,11 @@ namespace ASP.NETCoreWebApplication.Controllers
         
         [HttpPost]
         [Route("api/create")]
-        public async Task<ActionResult<Transaction>> PostTodoItem(Transaction transaction)
+        public async Task<ActionResult<Transaction>> PostTodoItem([FromQuery(Name = "listing")] string lid, Transaction transaction)
         {
             _context.Transaction.Add(transaction);
             await _context.SaveChangesAsync();
+            DataManager.Instance().TransactionDict[lid].Add(transaction);
             
             return CreatedAtAction("GetTransactions", new { id = transaction.TransactionId }, transaction);
         }

@@ -6,7 +6,7 @@ const styles = theme => ({
     root: {
         '& .MuiTextField-root': {
             margin: theme.spacing(1),
-            width: 140,
+            width: 200,
         },
     },
     divider: {
@@ -19,12 +19,12 @@ const styles = theme => ({
 
 const initializeedFieldValues = (props) => {
     return {
-        transactionId: '',
+/*        transactionId: '',*/
         buyerId: '',
-        paymentId: '',
+/*        paymentId: '',*/
         listingId: props.listingId,
         quantBought: '',
-        sellerId: '',
+        sellerId: props.sellerId,
         date: ''   
     }
 }
@@ -61,7 +61,14 @@ const TransactionForm = ({classes, ...props}) => {
     const handleSubmit = e => {
         e.preventDefault()
         if(validate()) {
-            window.alert("validation succeeded")
+            submitTransactoin(values).then(res => {
+                console.log(res);
+                if (res.ok) {
+                    window.alert("New transaction added");
+                } else {
+                    window.alert("Failed to add transaction, status code: " + res.status);
+                }
+            })
         }
     }
     
@@ -71,13 +78,13 @@ const TransactionForm = ({classes, ...props}) => {
                 <Grid item xs = {12} className={classes.smallMargin}>
                     <h1 id="addTransaction" > Add a Transactions for this Listing</h1>
                     <p> You can omit the Transaction Id and Payment Id for new transaction.</p>
-                    <TextField
+{/*                    <TextField
                         name = "transactionId"
                         variant = "outlined"
                         label = "Transaction Id"
                         value = {values.transactionId}
                         onChange = {handleInputChange}
-                    />
+                    />*/}
                     <TextField
                         name = "buyerId"
                         variant = "outlined"
@@ -86,13 +93,13 @@ const TransactionForm = ({classes, ...props}) => {
                         onChange = {handleInputChange}
                         {...(errors.buyerId && {error: true, helperText: errors.buyerId})}
                     />
-                    <TextField
+{/*                    <TextField
                         name = "paymentId"
                         variant = "outlined"
                         label = "Payment Id"
                         value = {values.paymentId}
                         onChange = {handleInputChange}
-                    />
+                    />*/}
                     <TextField
                         name = "listingId"
                         variant = "outlined"
@@ -144,5 +151,26 @@ const TransactionForm = ({classes, ...props}) => {
         </form>
     );
 }
+async function submitTransactoin(values) {
+    const data = {
+/*        "transactionId" : parseInt(values.transactionId),*/
+        "buyerId": parseInt(values.buyerId),
+        "listingId": parseInt(values.listingId),
+/*        "paymentId" : parseInt(values.paymentId),*/
+        "quantBought": parseInt(values.quantBought),
+        "sellerId" : parseInt(values.sellerId),
+        "date": values.date
+    }
+    console.log(data);
+    const response = await fetch('Transaction/api/create?listing=' + values.listingId, {
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers: {
+            'Content-Type': 'application/json'
+        },
+    });
+    return response
+}
+
 
 export default withStyles(styles)(TransactionForm);
