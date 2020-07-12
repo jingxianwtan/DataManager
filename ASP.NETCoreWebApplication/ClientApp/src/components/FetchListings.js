@@ -15,12 +15,12 @@ export class FetchListings extends Component {
         this.populateListings();
     }
 
-    static renderListingsTable(listings, parent, category, eid) {
+    renderListingsTable(listings, parent, category, eid) {
         return (
             <Grid>
                 <Paper>
                     <Grid>
-                        <ListingForm eventId={eid}/>
+                        <ListingForm eventId={eid} populateListings = {this.populateListings.bind(this)}/>
                     </Grid>
                 </Paper>
                 <Grid>
@@ -55,7 +55,7 @@ export class FetchListings extends Component {
     render() {
         let contents = this.state.loading
             ? <p><em>Loading...</em></p>
-            : FetchListings.renderListingsTable(this.state.listings, this.state.pName, this.state.cName, this.state.eid);
+            : this.renderListingsTable(this.state.listings, this.state.pName, this.state.cName, this.state.eid);
         return (
             <div>
                 {contents}

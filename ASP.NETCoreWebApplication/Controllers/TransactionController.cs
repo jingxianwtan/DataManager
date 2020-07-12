@@ -31,8 +31,12 @@ namespace ASP.NETCoreWebApplication.Controllers
         {
             _context.Transaction.Add(transaction);
             await _context.SaveChangesAsync();
+            if (!DataManager.Instance().TransactionDict.ContainsKey(lid))
+            {
+                DataManager.Instance().TransactionDict.Add(lid, new List<Transaction>());
+            }
             DataManager.Instance().TransactionDict[lid].Add(transaction);
-            
+
             return CreatedAtAction("GetTransactions", new { id = transaction.TransactionId }, transaction);
         }
     }

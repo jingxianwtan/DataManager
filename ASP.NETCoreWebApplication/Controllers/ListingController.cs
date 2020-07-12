@@ -32,6 +32,10 @@ namespace ASP.NETCoreWebApplication.Controllers
         {
             _context.Listing.Add(listing);
             await _context.SaveChangesAsync();
+            if (!DataManager.Instance().ListingDict.ContainsKey(eid))
+            {
+                DataManager.Instance().ListingDict.Add(eid, new List<Listing>());
+            }
             DataManager.Instance().ListingDict[eid].Add(listing);
             
             return CreatedAtAction("GetListings", new { id = listing.ListingId }, listing);

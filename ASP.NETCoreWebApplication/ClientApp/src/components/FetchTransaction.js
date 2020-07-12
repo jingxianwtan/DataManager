@@ -15,12 +15,12 @@ export class FetchTransaction extends Component {
         this.populateTransactions();
     }
 
-    static renderTransactionsTable(transactions, lid, sellerId) {
+    renderTransactionsTable(transactions, lid, sellerId) {
         return (
             <Grid>
                 <Paper>
                     <Grid>
-                        <TransactionForm listingId = {lid} sellerId = {sellerId} />
+                        <TransactionForm listingId = {lid} sellerId = {sellerId} populateTransactions={this.populateTransactions.bind(this)} />
                     </Grid>
                 </Paper>
                 <Grid>
@@ -58,14 +58,14 @@ export class FetchTransaction extends Component {
     render() {
         let contents = this.state.loading
             ? <p><em>Loading...</em></p>
-            : FetchTransaction.renderTransactionsTable(this.state.transactions,this.state.listingId, this.state.sellerId);
+            : this.renderTransactionsTable(this.state.transactions,this.state.listingId, this.state.sellerId);
         return (
             <div>
                 {contents}
             </div>
         );
     }
-
+    
     async populateTransactions() {
         console.log("props: ", this.props);
         const params = this.props.location.state;

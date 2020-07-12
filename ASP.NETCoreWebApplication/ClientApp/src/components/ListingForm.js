@@ -64,6 +64,7 @@ const ListingForm = ({classes, ...props}) => {
                 console.log(res);
                 if (res.ok) {
                     window.alert("New listing added");
+                    props.populateListings();
                 } else {
                     window.alert("Failed to add listing, status code: " + res.status);
                 }

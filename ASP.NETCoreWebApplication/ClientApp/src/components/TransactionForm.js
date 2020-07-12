@@ -65,6 +65,7 @@ const TransactionForm = ({classes, ...props}) => {
                 console.log(res);
                 if (res.ok) {
                     window.alert("New transaction added");
+                    props.populateTransactions();
                 } else {
                     window.alert("Failed to add transaction, status code: " + res.status);
                 }
@@ -151,6 +152,7 @@ const TransactionForm = ({classes, ...props}) => {
         </form>
     );
 }
+
 async function submitTransactoin(values) {
     const data = {
 /*        "transactionId" : parseInt(values.transactionId),*/
