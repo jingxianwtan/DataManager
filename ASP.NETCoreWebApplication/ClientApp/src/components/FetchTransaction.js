@@ -2,6 +2,9 @@
 import Link from "react-router-dom/Link";
 import TransactionForm from "./TransactionForm"
 import { Grid, Paper } from "@material-ui/core"
+import {ButtonGroup, Button} from "reactstrap";
+import EditIcon from "@material-ui/icons/Edit"
+import DeleteIcon from "@material-ui/icons/Delete"
 
 export class FetchTransaction extends Component {
     static displayName = FetchTransaction.name;
@@ -14,8 +17,11 @@ export class FetchTransaction extends Component {
     componentDidMount() {
         this.populateTransactions();
     }
+    
+
 
     renderTransactionsTable(transactions, lid, sellerId) {
+        
         return (
             <Grid>
                 <Paper>
@@ -35,19 +41,37 @@ export class FetchTransaction extends Component {
                             <th>Listing ID</th>
                             <th>Seller ID</th>
                             <th>Sale Date</th>
+                            <th>Options</th>
                         </tr>
                         </thead>
                         <tbody>
-                        {transactions.map(transactions =>
-                            <tr key={transactions.transactionId}>
-                                <td>{transactions.transactionId}</td>
-                                <td>{transactions.buyerId}</td>
-                                <td>{transactions.quantityBought}</td>
-                                <td>{transactions.listingId}</td>
-                                <td>{transactions.sellerId}</td>
-                                <td>{transactions.date}</td>
+                        {transactions.map(transaction => {
+                            const handleClick = e => {
+                                e.preventDefault();
+                                if (window.confirm("Are you sure you want to delete this transaction?")) {
+                                    this.deleteTransaction(transaction.transactionId, transaction.listingId);
+                                }
+                            }; 
+                            return <tr key={transaction.transactionId}>
+                                <td>{transaction.transactionId}</td>
+                                <td>{transaction.buyerId}</td>
+                                <td>{transaction.quantityBought}</td>
+                                <td>{transaction.listingId}</td>
+                                <td>{transaction.sellerId}</td>
+                                <td>{transaction.date}</td>
+                                <td>
+                                    <ButtonGroup variant="text">
+                                        <Button 
+                                            style={{marginTop: 5, backgroundColor: 'transparent', border: 'none'}}>
+                                            <EditIcon color="primary" fontSize="small"/></Button>
+                                        <Button
+                                            onClick={handleClick}
+                                            style={{marginTop: 5, backgroundColor: 'transparent', border: 'none'}}>
+                                            <DeleteIcon color="secondary" fontSize="small"/></Button>
+                                    </ButtonGroup>
+                                </td>
                             </tr>
-                        )}
+                            })}
                         </tbody>
                     </table>
                 </Grid>
@@ -73,5 +97,12 @@ export class FetchTransaction extends Component {
         const data = await response.json();
         console.log(data);
         this.setState({ transactions: data, loading: false, listingId: params.lid, sellerId: params.sellerId });
+    }
+    
+    async deleteTransaction(tid, lid) {
+        const response = await fetch('Transaction/api/delete?tid=' + tid + '&lid=' + lid, {method: 'DELETE',});
+        const data = await response;
+        console.log(data);
+        await this.populateTransactions();
     }
 }

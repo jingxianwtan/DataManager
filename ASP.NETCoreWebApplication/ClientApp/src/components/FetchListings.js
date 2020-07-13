@@ -2,6 +2,9 @@
 import Link from "react-router-dom/Link";
 import ListingForm from "./ListingForm"
 import { Grid, Paper } from "@material-ui/core"
+import {Button, ButtonGroup} from "reactstrap";
+import EditIcon from "@material-ui/icons/Edit"
+import DeleteIcon from "@material-ui/icons/Delete"
 
 export class FetchListings extends Component {
     static displayName = FetchListings.name;
@@ -33,16 +36,34 @@ export class FetchListings extends Component {
                             <th>Price</th>
                             <th>Quantity</th>
                             <th>User ID</th>
+                            <th>Options</th>
                         </tr>
                         </thead>
                         <tbody>
                         {listings.map(listing => {
+                            const handleClick = e => {
+                                e.preventDefault();
+                                if (window.confirm("Are you sure you want to delete this listing?")) {
+                                    this.deleteListing(listing.listingId, listing.eventId);
+                                }
+                            };
                             const link = `/${parent}/${category}/${eid}/listings/${listing.listingId}/transactions`;
                             return <tr key={listing.listingId}>
                                 <td><Link to = {{pathname: link, state: {lid : listing.listingId, sellerId: listing.userId}}}>{listing.listingId}</Link></td>
                                 <td>{listing.price}</td>
                                 <td>{listing.quantity}</td>
                                 <td>{listing.userId}</td>
+                                <td>
+                                    <ButtonGroup variant="text">
+                                        <Button
+                                            style={{marginTop: 5, backgroundColor: 'transparent', border: 'none'}}>
+                                            <EditIcon color="primary" fontSize="small"/></Button>
+                                        <Button
+                                            onClick={handleClick}
+                                            style={{marginTop: 5, backgroundColor: 'transparent', border: 'none'}}>
+                                            <DeleteIcon color="secondary" fontSize="small"/></Button>
+                                    </ButtonGroup>
+                                </td>
                             </tr>
                         })}
                         </tbody>
@@ -69,5 +90,12 @@ export class FetchListings extends Component {
         const response = await fetch('listing?event=' + params.eid); 
         const data = await response.json();
         this.setState({ listings: data, loading: false, pName : params.pName, cName: params.cName, eid : params.eid});
+    }
+
+    async deleteListing(lid, eid) {
+        const response = await fetch('Listing/api/delete?lid=' + lid + '&eid=' + eid, {method: 'DELETE',});
+        const data = await response;
+        console.log(data);
+        await this.populateListings();
     }
 }

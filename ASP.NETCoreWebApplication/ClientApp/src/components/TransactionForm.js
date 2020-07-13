@@ -32,7 +32,7 @@ const initializeedFieldValues = (props) => {
 const TransactionForm = ({classes, ...props}) => {
 
     const validate = (fieldValues = values) => {
-        let temp = {}
+        let temp = {...errors}
         if ('buyerId' in fieldValues)
             temp.buyerId = fieldValues.buyerId != "" ? "" : "This field is required."
         if ('listingId' in fieldValues)
@@ -55,11 +55,12 @@ const TransactionForm = ({classes, ...props}) => {
         setValues,
         errors,
         setErrors,
-        handleInputChange
+        handleInputChange,
+        resetForm
     } = useForm(initializeedFieldValues(props), validate)
 
     const handleSubmit = e => {
-        e.preventDefault()
+        e.preventDefault();
         if(validate()) {
             submitTransactoin(values).then(res => {
                 console.log(res);
@@ -142,7 +143,7 @@ const TransactionForm = ({classes, ...props}) => {
                     </Button>
                     <Button
                         variant = "contained"
-                        type = "submit"
+                        onClick={resetForm}
                         className={classes.smallMargin}
                     >Reset
                     </Button>

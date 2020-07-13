@@ -31,7 +31,7 @@ const initializeFieldValues = (props) => {
 const ListingForm = ({classes, ...props}) => {
     
     const validate = (fieldValues = values) => {
-        let temp = {}
+        let temp = {...errors}
         if ('userId' in fieldValues) 
             temp.userId = fieldValues.userId != "" ? "" : "This field is required."
         if ('eventId' in fieldValues)
@@ -54,7 +54,8 @@ const ListingForm = ({classes, ...props}) => {
         setValues,
         errors,
         setErrors,
-        handleInputChange
+        handleInputChange,
+        resetForm
     } = useForm(initializeFieldValues(props), validate)
     
     const handleSubmit = e => {
@@ -135,7 +136,7 @@ const ListingForm = ({classes, ...props}) => {
                             </Button>
                             <Button
                                 variant = "contained"
-                                type = "submit"
+                                onClick= {resetForm}
                                 className={classes.smallMargin}
                             >Reset
                             </Button>

@@ -28,7 +28,7 @@ namespace ASP.NETCoreWebApplication.Controllers
 
         [HttpPost]
         [Route("api/create")]
-        public async Task<ActionResult<Listing>> PostTodoItem([FromQuery(Name = "event")] string eid, Listing listing)
+        public async Task<ActionResult<Listing>> PostListing([FromQuery(Name = "event")] string eid, Listing listing)
         {
             _context.Listing.Add(listing);
             await _context.SaveChangesAsync();
@@ -39,6 +39,26 @@ namespace ASP.NETCoreWebApplication.Controllers
             DataManager.Instance().ListingDict[eid].Add(listing);
             
             return CreatedAtAction("GetListings", new { id = listing.ListingId }, listing);
+        }
+        
+        [HttpDelete]
+        [Route("api/delete")]
+        public async Task<ActionResult<Listing>> PostListing([FromQuery(Name = "lid")] string lid, [FromQuery(Name = "eid")] string eid)
+        {
+            Listing listing = await _context.Listing.FindAsync(Int32.Parse(lid));
+            if (listing == null) return NotFound();
+            _context.Listing.Remove(listing);
+            await _context.SaveChangesAsync();
+            List<Listing> listings = DataManager.Instance().ListingDict[eid];
+            foreach (Listing l in listings)
+            {
+                if (l.ListingId == Int32.Parse(lid))
+                {
+                    listings.Remove(l);
+                    break;
+                }
+            }
+            return listing;
         }
     }
 }

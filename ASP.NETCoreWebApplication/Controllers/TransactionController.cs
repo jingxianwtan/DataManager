@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using ASP.NETCoreWebApplication.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -27,7 +28,7 @@ namespace ASP.NETCoreWebApplication.Controllers
         
         [HttpPost]
         [Route("api/create")]
-        public async Task<ActionResult<Transaction>> PostTodoItem([FromQuery(Name = "listing")] string lid, Transaction transaction)
+        public async Task<ActionResult<Transaction>> PostTransaction([FromQuery(Name = "listing")] string lid, Transaction transaction)
         {
             _context.Transaction.Add(transaction);
             await _context.SaveChangesAsync();
@@ -39,5 +40,26 @@ namespace ASP.NETCoreWebApplication.Controllers
 
             return CreatedAtAction("GetTransactions", new { id = transaction.TransactionId }, transaction);
         }
+
+        [HttpDelete]
+        [Route("api/delete")]
+        public async Task<ActionResult<Transaction>> PostTransaction([FromQuery(Name = "tid")] string tid, [FromQuery(Name = "lid")] string lid)
+        {
+            Transaction transaction = await _context.Transaction.FindAsync(Int32.Parse(tid));
+            if (transaction == null) return NotFound();
+            _context.Transaction.Remove(transaction);
+            await _context.SaveChangesAsync();
+            List<Transaction> transactions = DataManager.Instance().TransactionDict[lid];
+            foreach (Transaction t in transactions)
+            {
+                if (t.TransactionId == Int32.Parse(tid))
+                {
+                    transactions.Remove(t);
+                    break;
+                }
+            }
+            return transaction;
+        }
+        
     }
 }
