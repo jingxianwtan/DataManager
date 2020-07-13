@@ -26,7 +26,7 @@ export class FetchTransaction extends Component {
             <Grid>
                 <Paper>
                     <Grid>
-                        <TransactionForm listingId = {lid} sellerId = {sellerId} populateTransactions={this.populateTransactions.bind(this)} />
+                        <TransactionForm listingId = {lid} sellerId = {sellerId} transaction={this.state.trans_to_be_edited} populateTransactions={this.populateTransactions.bind(this)} />
                     </Grid>
                 </Paper>
                 <Grid>
@@ -46,26 +46,28 @@ export class FetchTransaction extends Component {
                         </thead>
                         <tbody>
                         {transactions.map(transaction => {
-                            const handleClick = e => {
+                            const handleDelete = e => {
                                 e.preventDefault();
                                 if (window.confirm("Are you sure you want to delete this transaction?")) {
                                     this.deleteTransaction(transaction.transactionId, transaction.listingId);
                                 }
                             }; 
+                            
                             return <tr key={transaction.transactionId}>
                                 <td>{transaction.transactionId}</td>
                                 <td>{transaction.buyerId}</td>
-                                <td>{transaction.quantityBought}</td>
+                                <td>{transaction.quantBought}</td>
                                 <td>{transaction.listingId}</td>
                                 <td>{transaction.sellerId}</td>
                                 <td>{transaction.date}</td>
                                 <td>
                                     <ButtonGroup variant="text">
                                         <Button 
+                                            onClick={this.handleEdit.bind(this, transaction)}
                                             style={{marginTop: 5, backgroundColor: 'transparent', border: 'none'}}>
                                             <EditIcon color="primary" fontSize="small"/></Button>
                                         <Button
-                                            onClick={handleClick}
+                                            onClick={handleDelete}
                                             style={{marginTop: 5, backgroundColor: 'transparent', border: 'none'}}>
                                             <DeleteIcon color="secondary" fontSize="small"/></Button>
                                     </ButtonGroup>
@@ -77,6 +79,12 @@ export class FetchTransaction extends Component {
                 </Grid>
             </Grid>
         );
+    }
+
+    handleEdit(transaction, e) {
+        e.preventDefault();
+        this.setState({trans_to_be_edited: transaction}, function () {
+        });
     }
 
     render() {
@@ -91,18 +99,15 @@ export class FetchTransaction extends Component {
     }
     
     async populateTransactions() {
-        console.log("props: ", this.props);
         const params = this.props.location.state;
         const response = await fetch('transaction?listing=' + params.lid);
         const data = await response.json();
-        console.log(data);
         this.setState({ transactions: data, loading: false, listingId: params.lid, sellerId: params.sellerId });
     }
     
     async deleteTransaction(tid, lid) {
         const response = await fetch('Transaction/api/delete?tid=' + tid + '&lid=' + lid, {method: 'DELETE',});
         const data = await response;
-        console.log(data);
         await this.populateTransactions();
     }
 }

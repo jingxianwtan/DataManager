@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+﻿import React, { useEffect } from 'react';
 import { Grid, TextField, withStyles, Button, Divider} from "@material-ui/core"
 import useForm from "./useForm"
 
@@ -17,20 +17,19 @@ const styles = theme => ({
     }
 })
 
-const initializeedFieldValues = (props) => {
+const initializedFieldValues = (props) => {
     return {
-/*        transactionId: '',*/
+        transactionId: '',
         buyerId: '',
-/*        paymentId: '',*/
+        /*        paymentId: '',*/
         listingId: props.listingId,
         quantBought: '',
         sellerId: props.sellerId,
-        date: ''   
+        date: ''
     }
 }
 
 const TransactionForm = ({classes, ...props}) => {
-
     const validate = (fieldValues = values) => {
         let temp = {...errors}
         if ('buyerId' in fieldValues)
@@ -57,22 +56,49 @@ const TransactionForm = ({classes, ...props}) => {
         setErrors,
         handleInputChange,
         resetForm
-    } = useForm(initializeedFieldValues(props), validate)
+    } = useForm(initializedFieldValues(props), validate)
 
     const handleSubmit = e => {
         e.preventDefault();
         if(validate()) {
-            submitTransactoin(values).then(res => {
-                console.log(res);
-                if (res.ok) {
-                    window.alert("New transaction added");
-                    props.populateTransactions();
-                } else {
-                    window.alert("Failed to add transaction, status code: " + res.status);
-                }
-            })
+            if (values.transactionId === '') {
+                submitTransactoin(values).then(res => {
+                    if (res.ok) {
+                        window.alert("New transaction added");
+                        props.populateTransactions();
+                        resetForm();
+                    } else {
+                        window.alert("Failed to add transaction, status code: " + res.status);
+                    }
+                })   
+            } else {
+                updateTransactoin(values).then(res => {
+                    if (res.ok) {
+                        window.alert("Transaction updated");
+                        props.populateTransactions();
+                        resetForm();
+                    } else {
+                        window.alert("Failed to update transaction, status code: " + res.status);
+                    }
+                })
+            }
         }
     }
+
+    useEffect(() => {
+        if (props.transaction !== undefined) {
+            const transaction = props.transaction;
+            setValues({
+                    transactionId: transaction.transactionId,
+                    buyerId: transaction.buyerId,
+                    /*        paymentId: '',*/
+                    listingId: transaction.listingId,
+                    quantBought: transaction.quantBought,
+                    sellerId: transaction.sellerId,
+                    date: transaction.date
+                }) 
+        }
+    }, [props.transaction, setValues]);
     
     return (
         <form autoComplete= "off" noValidate className = {classes.root} onSubmit= {handleSubmit}>
@@ -164,9 +190,30 @@ async function submitTransactoin(values) {
         "sellerId" : parseInt(values.sellerId),
         "date": values.date
     }
-    console.log(data);
+    console.log('data to be submit is: ' + JSON.stringify(data));
     const response = await fetch('Transaction/api/create?listing=' + values.listingId, {
         method: 'POST',
+        body: JSON.stringify(data),
+        headers: {
+            'Content-Type': 'application/json'
+        },
+    });
+    return response
+}
+
+async function updateTransactoin(values) {
+    const data = {
+        "transactionId" : parseInt(values.transactionId),
+        "buyerId": parseInt(values.buyerId),
+        "listingId": parseInt(values.listingId),
+        /*        "paymentId" : parseInt(values.paymentId),*/
+        "quantBought": parseInt(values.quantBought),
+        "sellerId" : parseInt(values.sellerId),
+        "date": values.date
+    }
+    console.log('data to be updated is: ' + JSON.stringify(data));
+    const response = await fetch('Transaction/api/update?listing=' + values.listingId, {
+        method: 'PUT',
         body: JSON.stringify(data),
         headers: {
             'Content-Type': 'application/json'

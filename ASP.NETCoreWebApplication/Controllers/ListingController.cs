@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ASP.NETCoreWebApplication.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace ASP.NETCoreWebApplication.Controllers
 {
@@ -59,6 +60,42 @@ namespace ASP.NETCoreWebApplication.Controllers
                 }
             }
             return listing;
+        }
+        
+        [HttpPut]
+        [Route("api/update")]
+        public async Task<IActionResult> PutListing([FromQuery(Name = "event")] string eid, Listing listing)
+        {
+            _context.Entry(listing).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!_context.Transaction.Any(l => l.ListingId == listing.ListingId))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            string lid = listing.ListingId.ToString();
+            List<Listing> listings = DataManager.Instance().ListingDict[eid];
+            foreach (Listing l in listings)
+            {
+                if (l.ListingId == Int32.Parse(lid))
+                {
+                    listings.Remove(l);
+                    listings.Add(listing);
+                    break;
+                }
+            }
+            return NoContent();
         }
     }
 }

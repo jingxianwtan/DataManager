@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using ASP.NETCoreWebApplication.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace ASP.NETCoreWebApplication.Controllers
 {
@@ -59,6 +61,42 @@ namespace ASP.NETCoreWebApplication.Controllers
                 }
             }
             return transaction;
+        }
+
+        [HttpPut]
+        [Route("api/update")]
+        public async Task<IActionResult> PutTransaction([FromQuery(Name = "listing")] string lid, Transaction transaction)
+        {
+            _context.Entry(transaction).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!_context.Transaction.Any(t => t.TransactionId == transaction.TransactionId))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            string tid = transaction.TransactionId.ToString();
+            List<Transaction> transactions = DataManager.Instance().TransactionDict[lid];
+            foreach (Transaction t in transactions)
+            {
+                if (t.TransactionId == Int32.Parse(tid))
+                {
+                    transactions.Remove(t);
+                    transactions.Add(transaction);
+                    break;
+                }
+            }
+            return NoContent();
         }
         
     }

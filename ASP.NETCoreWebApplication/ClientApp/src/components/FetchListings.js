@@ -23,7 +23,7 @@ export class FetchListings extends Component {
             <Grid>
                 <Paper>
                     <Grid>
-                        <ListingForm eventId={eid} populateListings = {this.populateListings.bind(this)}/>
+                        <ListingForm eventId={eid} listing = {this.state.listing_to_be_edited} populateListings = {this.populateListings.bind(this)}/>
                     </Grid>
                 </Paper>
                 <Grid>
@@ -56,6 +56,7 @@ export class FetchListings extends Component {
                                 <td>
                                     <ButtonGroup variant="text">
                                         <Button
+                                            onClick={this.handleEdit.bind(this, listing)}
                                             style={{marginTop: 5, backgroundColor: 'transparent', border: 'none'}}>
                                             <EditIcon color="primary" fontSize="small"/></Button>
                                         <Button
@@ -73,6 +74,12 @@ export class FetchListings extends Component {
         );
     }
 
+    handleEdit(listing, e) {
+        e.preventDefault();
+        this.setState({listing_to_be_edited: listing}, function () {
+        });
+    }
+    
     render() {
         let contents = this.state.loading
             ? <p><em>Loading...</em></p>
@@ -85,7 +92,6 @@ export class FetchListings extends Component {
     }
 
     async populateListings() {
-        console.log("props: ", this.props);
         const params = this.props.location.state;
         const response = await fetch('listing?event=' + params.eid); 
         const data = await response.json();
@@ -95,7 +101,6 @@ export class FetchListings extends Component {
     async deleteListing(lid, eid) {
         const response = await fetch('Listing/api/delete?lid=' + lid + '&eid=' + eid, {method: 'DELETE',});
         const data = await response;
-        console.log(data);
         await this.populateListings();
     }
 }

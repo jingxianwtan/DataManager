@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+﻿import React, { useEffect } from 'react';
 import { Grid, TextField, withStyles, Button, Divider} from "@material-ui/core"
 import useForm from "./useForm"
 
@@ -19,7 +19,7 @@ const styles = theme => ({
 
 const initializeFieldValues = (props) => {
     return {
-/*        listingId: '',*/
+        listingId: '',
         userId: '',
         eventId: props.eventId,
         createdTime: '',
@@ -29,7 +29,6 @@ const initializeFieldValues = (props) => {
 }
 
 const ListingForm = ({classes, ...props}) => {
-    
     const validate = (fieldValues = values) => {
         let temp = {...errors}
         if ('userId' in fieldValues) 
@@ -46,7 +45,7 @@ const ListingForm = ({classes, ...props}) => {
             ...temp
         })
         if (fieldValues == values) 
-            return Object.values(temp).every(x => x == "")
+            return Object.values(temp).every(x => x === "")
     }
     
     const {
@@ -61,17 +60,43 @@ const ListingForm = ({classes, ...props}) => {
     const handleSubmit = e => {
         e.preventDefault()
         if(validate()) {
-            submitListing(values).then(res => {
-                console.log(res);
-                if (res.ok) {
-                    window.alert("New listing added");
-                    props.populateListings();
-                } else {
-                    window.alert("Failed to add listing, status code: " + res.status);
-                }
-            })
+            if (values.listingId === '') {
+                submitListing(values).then(res => {
+                    if (res.ok) {
+                        window.alert("New listing added");
+                        props.populateListings();
+                        resetForm();
+                    } else {
+                        window.alert("Failed to add listing, status code: " + res.status);
+                    }
+                })   
+            } else {
+                updateListing(values).then(res => {
+                    if (res.ok) {
+                        window.alert("Listing updated");
+                        props.populateListings();
+                        resetForm();
+                    } else {
+                        window.alert("Failed to update listing, status code: " + res.status);
+                    }
+                })
+            }
         }
     }
+
+    useEffect(() => {
+        if (props.listing !== undefined) {
+            const listing = props.listing;
+            setValues({
+                listingId: listing.listingId,
+                userId: listing.userId,
+                eventId: listing.eventId,
+                createdTime: listing.createdTime,
+                price: listing.price,
+                quantity: listing.quantity
+            })
+        }
+    }, [props.listing, setValues]);
     
     return (
         <form autoComplete= "off" noValidate className = {classes.root} onSubmit= {handleSubmit}>
@@ -157,9 +182,29 @@ async function submitListing(values) {
         "Price": parseFloat(values.price),
         "Quantity": parseInt(values.quantity)
     }
-    console.log(data);
+    console.log('data to be submit is: ' + JSON.stringify(data));
     const response = await fetch('Listing/api/create?event=' + values.eventId, {
         method: 'POST',
+        body: JSON.stringify(data),
+        headers: {
+            'Content-Type': 'application/json'
+        },
+    });
+    return response
+}
+
+async function updateListing(values) {
+    const data = {
+        "ListingId": parseInt(values.listingId),
+        "UserId": parseInt(values.userId),
+        "EventId": parseInt(values.eventId),
+        "CreatedTime": values.createdTime,
+        "Price": parseFloat(values.price),
+        "Quantity": parseInt(values.quantity)
+    }
+    console.log('data to be updated is: ' + JSON.stringify(data));
+    const response = await fetch('Listing/api/update?event=' + values.eventId, {
+        method: 'PUT',
         body: JSON.stringify(data),
         headers: {
             'Content-Type': 'application/json'
