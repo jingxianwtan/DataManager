@@ -18,17 +18,17 @@ export class FetchListings extends Component {
         this.populateListings();
     }
 
-    renderListingsTable(listings, parent, category, eid) {
+    renderListingsTable(listings, eventId, eventName) {
         return (
             <Grid>
                 <Paper>
                     <Grid>
-                        <ListingForm eventId={eid} listing = {this.state.listing_to_be_edited} populateListings = {this.populateListings.bind(this)}/>
+                        <ListingForm eventId={eventId} listing = {this.state.listing_to_be_edited} populateListings = {this.populateListings.bind(this)}/>
                     </Grid>
                 </Paper>
                 <Grid>
                     <h1 id="tabelLabel" >All Listings</h1>
-                    <p>Here are all the Listings.</p>
+                    <p>Here are all the Listings for {eventName}.</p>
                     <table className='table table-striped' aria-labelledby="tabelLabel">
                         <thead>
                         <tr>
@@ -47,9 +47,8 @@ export class FetchListings extends Component {
                                     this.deleteListing(listing.listingId, listing.eventId);
                                 }
                             };
-                            const link = `/${parent}/${category}/${eid}/listings/${listing.listingId}/transactions`;
                             return <tr key={listing.listingId}>
-                                <td><Link to = {{pathname: link, state: {lid : listing.listingId, sellerId: listing.userId}}}>{listing.listingId}</Link></td>
+                                <td><Link to = {{pathname: `/transaction`, state: {listingId : listing.listingId, sellerId: listing.userId, eventName: eventName}}}>{listing.listingId}</Link></td>
                                 <td>{listing.price}</td>
                                 <td>{listing.quantity}</td>
                                 <td>{listing.userId}</td>
@@ -83,7 +82,7 @@ export class FetchListings extends Component {
     render() {
         let contents = this.state.loading
             ? <p><em>Loading...</em></p>
-            : this.renderListingsTable(this.state.listings, this.state.pName, this.state.cName, this.state.eid);
+            : this.renderListingsTable(this.state.listings, this.state.eventId, this.state.eventName);
         return (
             <div>
                 {contents}
@@ -93,9 +92,9 @@ export class FetchListings extends Component {
 
     async populateListings() {
         const params = this.props.location.state;
-        const response = await fetch('listing?event=' + params.eid); 
+        const response = await fetch('listing?event=' + params.eventId); 
         const data = await response.json();
-        this.setState({ listings: data, loading: false, pName : params.pName, cName: params.cName, eid : params.eid});
+        this.setState({ listings: data, loading: false, eventId : params.eventId, eventName : params.eventName});
     }
 
     async deleteListing(lid, eid) {

@@ -22,10 +22,14 @@ export default class App extends Component {
           <Route exact path='/' component={Home} />
           <Route path='/counter' component={Counter} />
           <Route path='/fetch-data' component={FetchData} />
-          <Route exact path='/:parent' component={FetchCategory} />
+{/*          <Route exact path='/:parent' component={FetchCategory} />
           <Route exact path='/:parent/:category' component={FetchEvent} />
           <Route exact path='/:parent/:category/:eid/listings' component={FetchListings} />
-          <Route exact path='/:parent/:category/:eid/listings/:lid/transactions' component={FetchTransaction} />
+          <Route exact path='/:parent/:category/:eid/listings/:lid/transactions' component={FetchTransaction} />*/}
+          <Route exact path='/category' component={FetchCategory} />
+          <Route exact path='/event' component={FetchEvent} />
+          <Route exact path='/listing' component={FetchListings} />
+          <Route exact path='/transaction' component={FetchTransaction} />
         </Switch>
       </Layout>
     );

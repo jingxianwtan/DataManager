@@ -28,9 +28,8 @@ export class FetchEvent extends Component {
                 </thead>
                 <tbody>
                 {events.map(event => {
-                    const link = `/${parent}/${category}/${event.eventId}/listings`;
                     return <tr key={event.eventName}>
-                        <td><Link to={{pathname: link, state: {pName : parent, cName : category, eid : event.eventId}}}>{event.eventName}</Link></td>
+                        <td><Link to={{pathname: `/listing`, state: {eventId : event.eventId, eventName: event.eventName}}}>{event.eventName}</Link></td>
                         <td>{event.eventTime}</td>
                         <td>{event.location}</td>
                         <td>{event.team}</td>

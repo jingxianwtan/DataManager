@@ -24,9 +24,8 @@ export class FetchCategory extends Component {
                 </thead>
                 <tbody>
                 {categories.map(category => {
-                    const link = `/${parent}/${category.name}`;
                     return <tr key={category.name}>
-                            <td><Link to={{pathname: link, state: {pName : parent, cName : category.name, cid : category.categoryId}}}>{category.name}</Link></td>
+                            <td><Link to={{pathname: `/event`, state: {pName : parent, cName : category.name, cid : category.categoryId}}}>{category.name}</Link></td>
                             <td>{category.categoryId}</td>
                         </tr>
                 })}

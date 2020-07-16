@@ -18,6 +18,7 @@ const styles = theme => ({
 })
 
 const initializedFieldValues = (props) => {
+    var d = new Date();
     return {
         transactionId: '',
         buyerId: '',
@@ -25,7 +26,7 @@ const initializedFieldValues = (props) => {
         listingId: props.listingId,
         quantBought: '',
         sellerId: props.sellerId,
-        date: ''
+        date: d.getFullYear() + "-" + ('0' + (d.getMonth())).slice(-2) + "-" + ('0' + d.getDate()).slice(-2) + "T" + ('0' + d.getHours()).slice(-2) + ":" + ('0' + d.getMinutes()).slice(-2) + ":" + ('0' + d.getSeconds()).slice(-2)
     }
 }
 
@@ -68,7 +69,10 @@ const TransactionForm = ({classes, ...props}) => {
                         props.populateTransactions();
                         resetForm();
                     } else {
-                        window.alert("Failed to add transaction, status code: " + res.status);
+                        res.json().then(err => {
+                            console.log("error is", err.message);
+                            window.alert("Failed to add transaction, status code: " + res.status + ": \""+ err.message + "\"");
+                        })
                     }
                 })   
             } else {

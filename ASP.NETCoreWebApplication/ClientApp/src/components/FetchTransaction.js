@@ -20,18 +20,18 @@ export class FetchTransaction extends Component {
     
 
 
-    renderTransactionsTable(transactions, lid, sellerId) {
+    renderTransactionsTable(transactions, listingId, sellerId, eventName) {
         
         return (
             <Grid>
                 <Paper>
                     <Grid>
-                        <TransactionForm listingId = {lid} sellerId = {sellerId} transaction={this.state.trans_to_be_edited} populateTransactions={this.populateTransactions.bind(this)} />
+                        <TransactionForm listingId = {listingId} sellerId = {sellerId} transaction={this.state.trans_to_be_edited} populateTransactions={this.populateTransactions.bind(this)} />
                     </Grid>
                 </Paper>
                 <Grid>
                     <h1 id="tabelLabel" >All Transactions</h1>
-                    <p>Here are all the transactions for this listing.</p>
+                    <p>Here are all the transactions for listing {listingId} of event {eventName}.</p>
                     <table className='table table-striped' aria-labelledby="tabelLabel">
                         <thead>
                         <tr>
@@ -90,7 +90,7 @@ export class FetchTransaction extends Component {
     render() {
         let contents = this.state.loading
             ? <p><em>Loading...</em></p>
-            : this.renderTransactionsTable(this.state.transactions,this.state.listingId, this.state.sellerId);
+            : this.renderTransactionsTable(this.state.transactions,this.state.listingId, this.state.sellerId, this.state.eventName);
         return (
             <div>
                 {contents}
@@ -100,9 +100,9 @@ export class FetchTransaction extends Component {
     
     async populateTransactions() {
         const params = this.props.location.state;
-        const response = await fetch('transaction?listing=' + params.lid);
+        const response = await fetch('transaction?listing=' + params.listingId);
         const data = await response.json();
-        this.setState({ transactions: data, loading: false, listingId: params.lid, sellerId: params.sellerId });
+        this.setState({ transactions: data, loading: false, listingId: params.listingId, sellerId: params.sellerId, eventName: params.eventName });
     }
     
     async deleteTransaction(tid, lid) {

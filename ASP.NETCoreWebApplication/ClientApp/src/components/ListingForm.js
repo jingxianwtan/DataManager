@@ -18,11 +18,12 @@ const styles = theme => ({
 })
 
 const initializeFieldValues = (props) => {
+    var d = new Date();
     return {
         listingId: '',
         userId: '',
         eventId: props.eventId,
-        createdTime: '',
+        createdTime: d.getFullYear() + "-" + ('0' + (d.getMonth())).slice(-2) + "-" + ('0' + d.getDate()).slice(-2) + "T" + ('0' + d.getHours()).slice(-2) + ":" + ('0' + d.getMinutes()).slice(-2) + ":" + ('0' + d.getSeconds()).slice(-2),
         price: '',
         quantity: ''
     }

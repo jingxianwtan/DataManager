@@ -24,10 +24,10 @@ export class Home extends Component {
         <p>The <code>ClientApp</code> subdirectory is a standard React application based on the <code>create-react-app</code> template. If you open a command prompt in that directory, you can run <code>npm</code> commands such as <code>npm test</code> or <code>npm install</code>.</p>*/}
         
           <ul>
-              <li><Link to= {{pathname: '/concert', state: {pid : '1', pName : 'concert'}}}>Concert</Link></li>
-              <li><Link to= {{pathname: '/sport', state: {pid : '2', pName : 'sport'}}}>Sport</Link></li>
-              <li> <Link to={{pathname: '/theatre', state: {pid : '3', pName : 'theatre'}}}>Theatre</Link></li>
-              <li><Link to={{pathname: '/festival', state: {pid : '4', pName : 'festival'}}}>Festival</Link></li>
+              <li><Link to= {{pathname: '/category', state: {pid : '1', pName : 'concert'}}}>Concert</Link></li>
+              <li><Link to= {{pathname: '/category', state: {pid : '2', pName : 'sport'}}}>Sport</Link></li>
+              <li> <Link to={{pathname: '/category', state: {pid : '3', pName : 'theatre'}}}>Theatre</Link></li>
+              <li><Link to={{pathname: '/category', state: {pid : '4', pName : 'festival'}}}>Festival</Link></li>
           </ul>
 
       </div>
