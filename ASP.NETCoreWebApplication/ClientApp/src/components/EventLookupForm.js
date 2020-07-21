@@ -39,7 +39,7 @@ class EventLookupForm extends Component {
                             type = "submit"
                             variant = "contained"
                             style={{backgroundColor: 'green', color: 'white', height: 55}}
-                        >EventLookUp</Button>
+                        >Search Event</Button>
                     </Grid>
                 </Grid>
             </form>
