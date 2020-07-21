@@ -34,20 +34,20 @@ const TransactionForm = ({classes, ...props}) => {
     const validate = (fieldValues = values) => {
         let temp = {...errors}
         if ('buyerId' in fieldValues)
-            temp.buyerId = fieldValues.buyerId != "" ? "" : "This field is required."
+            temp.buyerId = fieldValues.buyerId !== "" ? "" : "This field is required."
         if ('listingId' in fieldValues)
-            temp.listingId = fieldValues.listingId != "" ? "" : "This field is required."
+            temp.listingId = fieldValues.listingId !== "" ? "" : "This field is required."
         if ('quantBought' in fieldValues)
-            temp.quantBought = fieldValues.quantBought != "" && !isNaN(fieldValues.quantBought)? "" : "This field should be digit only."
+            temp.quantBought = fieldValues.quantBought !== "" && !isNaN(fieldValues.quantBought)? "" : "This field should be digit only."
         if ('sellerId' in fieldValues)
-            temp.sellerId = fieldValues.sellerId != "" ? "" : "This field is required."
+            temp.sellerId = fieldValues.sellerId !== "" ? "" : "This field is required."
         if ('date' in fieldValues)
             temp.date = fieldValues.date.match( /(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})/) ? "" : "Date format should be yyyy-mm-ddThh:mm:ss"
         setErrors({
             ...temp
         })
-        if (fieldValues == values)
-            return Object.values(temp).every(x => x == "")
+        if (fieldValues === values)
+            return Object.values(temp).every(x => x === "")
     }
     
     const {
@@ -108,8 +108,8 @@ const TransactionForm = ({classes, ...props}) => {
         <form autoComplete= "off" noValidate className = {classes.root} onSubmit= {handleSubmit}>
             <Grid container>
                 <Grid item xs = {12} className={classes.smallMargin}>
-                    <h1 id="addTransaction" > Add a Transactions for this Listing</h1>
-                    <p> You can omit the Transaction Id and Payment Id for new transaction.</p>
+                    <h1 id="addTransaction" > Add Transactions for listing {props.listingId} of {props.eventName}</h1>
+{/*                    <p> You can omit the Transaction Id and Payment Id for new transaction.</p>*/}
 {/*                    <TextField
                         name = "transactionId"
                         variant = "outlined"

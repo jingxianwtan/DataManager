@@ -1,35 +1,55 @@
 import React, { Component } from 'react';
-import {Link} from "react-router-dom";
+import { Grid, Button } from "@material-ui/core"
+import EventLookupForm from "./EventLookupForm";
 
 export class Home extends Component {
   static displayName = Home.name;
 
+    handleClick(pid, pname, e) {
+        e.preventDefault();
+        this.props.history.push(`/category`,
+            {pid: pid, pname: pname})
+    }
+  
   render () {
     return (
       <div>
           <h1>Test Data Manager</h1>
-{/*        <h1>Hello, world!</h1>
-        <p>Welcome to your new single-page application, built with:</p>
-        <ul>
-          <li><a href='https://get.asp.net/'>ASP.NET Core</a> and <a href='https://msdn.microsoft.com/en-us/library/67ef8sbd.aspx'>C#</a> for cross-platform server-side code</li>
-          <li><a href='https://facebook.github.io/react/'>React</a> for client-side code</li>
-          <li><a href='http://getbootstrap.com/'>Bootstrap</a> for layout and styling</li>
-        </ul>
-        <p>To help you get started, we have also set up:</p>
-        <ul>
-          <li><strong>Client-side navigation</strong>. For example, click <em>Counter</em> then <em>Back</em> to return here.</li>
-          <li><strong>Development server integration</strong>. In development mode, the development server from <code>create-react-app</code> runs in the background automatically, so your client-side resources are dynamically built on demand and the page refreshes when you modify any file.</li>
-          <li><strong>Efficient production builds</strong>. In production mode, development-time features are disabled, and your <code>dotnet publish</code> configuration produces minified, efficiently bundled JavaScript files.</li>
-        </ul>
-        <p>The <code>ClientApp</code> subdirectory is a standard React application based on the <code>create-react-app</code> template. If you open a command prompt in that directory, you can run <code>npm</code> commands such as <code>npm test</code> or <code>npm install</code>.</p>*/}
-        
-          <ul>
-              <li><Link to= {{pathname: '/category', state: {pid : '1', pName : 'concert'}}}>Concert</Link></li>
-              <li><Link to= {{pathname: '/category', state: {pid : '2', pName : 'sport'}}}>Sport</Link></li>
-              <li> <Link to={{pathname: '/category', state: {pid : '3', pName : 'theatre'}}}>Theatre</Link></li>
-              <li><Link to={{pathname: '/category', state: {pid : '4', pName : 'festival'}}}>Festival</Link></li>
-          </ul>
-
+          <Grid container>
+              <Grid container item xs = {12}>
+                  <Grid item xs = {3}>
+                      <Button
+                          onClick= {this.handleClick.bind(this, '1', 'concert')}
+                          variant = "contained"
+                          style={{backgroundColor: 'deeppink', color: 'white', marginTop: 10, minWidth: 250}}
+                      >Concert</Button>
+                  </Grid>
+                  <Grid item xs = {3}>
+                      <Button
+                          onClick= {this.handleClick.bind(this, '2', 'sport')}
+                          variant = "contained"
+                          style={{backgroundColor: 'deepskyblue', color: 'white', marginTop: 10, minWidth: 250}}
+                      >Sport</Button>
+                  </Grid>
+                  <Grid item xs = {3}>
+                      <Button
+                          onClick= {this.handleClick.bind(this, '3', 'theatre')}
+                          variant = "contained"
+                          style={{backgroundColor: 'gold', color: 'white', marginTop: 10, minWidth: 250}}
+                      >Theatre</Button>
+                  </Grid>
+                  <Grid item xs = {3}>
+                      <Button
+                          onClick= {this.handleClick.bind(this, '4', 'festival')}
+                          variant = "contained"
+                          style={{backgroundColor: 'limegreen', color: 'white', marginTop: 10, minWidth: 250}}
+                      >Festival</Button>
+                  </Grid>
+              </Grid>
+              <Grid item xs = {12} style = {{marginTop: 30}}>
+                  <EventLookupForm> </EventLookupForm>
+              </Grid>
+          </Grid>
       </div>
     );
   }

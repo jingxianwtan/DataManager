@@ -12,6 +12,10 @@ namespace ASP.NETCoreWebApplication.Models
         private DataManager()
         {
             CategoryDict = new Dictionary<string, List<Category>>();
+            EventDict = new Dictionary<string, List<Event>>();
+            ListingDict = new Dictionary<string, List<Listing>>();
+            TransactionDict = new Dictionary<string, List<Transaction>>();
+            
             var categories = dao.Category.ToList();
             foreach (var c in categories)
             {
@@ -26,8 +30,7 @@ namespace ASP.NETCoreWebApplication.Models
                     CategoryDict[pid].Add(c);
                 }
             }
-
-            EventDict = new Dictionary<string, List<Event>>();
+            
             var events = dao.Event.ToList();
             foreach (var e in events)
             {
@@ -41,14 +44,16 @@ namespace ASP.NETCoreWebApplication.Models
                     EventDict.Add(cid, new List<Event>());
                     EventDict[cid].Add(e);
                 }
+                ListingDict.Add(e.EventId.ToString(), new List<Listing>());
             }
-
-            ListingDict = new Dictionary<string, List<Listing>>();
+            
             var listings = dao.Listing.ToList();
             foreach (var l in listings)
             {
                 var eid = l.EventId.ToString();
-                if (ListingDict.ContainsKey(eid))
+                ListingDict[eid].Add(l);
+                TransactionDict.Add(l.ListingId.ToString(), new List<Transaction>());
+                /*if (ListingDict.ContainsKey(eid))
                 {
                     ListingDict[eid].Add(l);
                 }
@@ -56,15 +61,15 @@ namespace ASP.NETCoreWebApplication.Models
                 {
                     ListingDict.Add(eid, new List<Listing>());
                     ListingDict[eid].Add(l);
-                }
+                }*/
             }
-
-            TransactionDict = new Dictionary<string, List<Transaction>>();
+            
             var transactions = dao.Transaction.ToList();
             foreach (var t in transactions)
             {
                 var lid = t.ListingId.ToString();
-                if (TransactionDict.ContainsKey(lid))
+                TransactionDict[lid].Add(t);
+                /*if (TransactionDict.ContainsKey(lid))
                 {
                     TransactionDict[lid].Add(t);
                 }
@@ -72,7 +77,7 @@ namespace ASP.NETCoreWebApplication.Models
                 {
                     TransactionDict.Add(lid, new List<Transaction>());
                     TransactionDict[lid].Add(t);
-                }
+                }*/
             }
         }
 

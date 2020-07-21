@@ -33,19 +33,19 @@ const ListingForm = ({classes, ...props}) => {
     const validate = (fieldValues = values) => {
         let temp = {...errors}
         if ('userId' in fieldValues) 
-            temp.userId = fieldValues.userId != "" ? "" : "This field is required."
+            temp.userId = fieldValues.userId !== "" ? "" : "This field is required."
         if ('eventId' in fieldValues)
-            temp.eventId = fieldValues.eventId != "" ? "" : "This field is required."
+            temp.eventId = fieldValues.eventId !== "" ? "" : "This field is required."
         if ('createdTime' in fieldValues) 
             temp.createdTime = fieldValues.createdTime.match( /(\d{4})-(\d{2}|[01-12])-(\d{2})T(\d{2}):(\d{2}):(\d{2})/) ? "" : "Date format should be yyyy-mm-ddThh:mm:ss"
         if ('price' in fieldValues) 
-            temp.price = fieldValues.price != "" && !isNaN(fieldValues.price)? "" : "This field should be digit only."
+            temp.price = fieldValues.price !== "" && !isNaN(fieldValues.price)? "" : "This field should be digit only."
         if ('quantity' in fieldValues) 
-            temp.quantity = fieldValues.quantity != "" && !isNaN(fieldValues.quantity) ? "" : "This field should be digit only."
+            temp.quantity = fieldValues.quantity !== "" && !isNaN(fieldValues.quantity) ? "" : "This field should be digit only."
         setErrors({
             ...temp
         })
-        if (fieldValues == values) 
+        if (fieldValues === values) 
             return Object.values(temp).every(x => x === "")
     }
     
@@ -103,8 +103,8 @@ const ListingForm = ({classes, ...props}) => {
         <form autoComplete= "off" noValidate className = {classes.root} onSubmit= {handleSubmit}>
             <Grid container>
                     <Grid item xs = {12} className={classes.smallMargin}>
-                        <h1 id="addListing" >Add a Listing for this Event</h1>
-                        <p>You can omit the Listing Id for new Listing.</p>
+                        <h1 id="addListing" >Add a Listing for event {props.eventName}</h1>
+{/*                        <p>You can omit the Listing Id for new Listing.</p>*/}
 {/*                        <TextField
                             name = "listingId"
                             variant = "outlined"

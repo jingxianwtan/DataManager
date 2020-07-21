@@ -1,5 +1,4 @@
 ﻿import React, { Component } from 'react';
-import Link from "react-router-dom/Link";
 import TransactionForm from "./TransactionForm"
 import { Grid, Paper } from "@material-ui/core"
 import {ButtonGroup, Button} from "reactstrap";
@@ -26,12 +25,12 @@ export class FetchTransaction extends Component {
             <Grid>
                 <Paper>
                     <Grid>
-                        <TransactionForm listingId = {listingId} sellerId = {sellerId} transaction={this.state.trans_to_be_edited} populateTransactions={this.populateTransactions.bind(this)} />
+                        <TransactionForm listingId = {listingId} sellerId = {sellerId} transaction={this.state.trans_to_be_edited} populateTransactions={this.populateTransactions.bind(this)} eventName = {eventName} />
                     </Grid>
                 </Paper>
                 <Grid>
-                    <h1 id="tabelLabel" >All Transactions</h1>
-                    <p>Here are all the transactions for listing {listingId} of event {eventName}.</p>
+                    <h1 id="tabelLabel" >All Transactions for {eventName} listing {listingId}</h1>
+{/*                    <p>Here are all the transactions for listing {listingId} of event {eventName}.</p>*/}
                     <table className='table table-striped' aria-labelledby="tabelLabel">
                         <thead>
                         <tr>
@@ -64,11 +63,11 @@ export class FetchTransaction extends Component {
                                     <ButtonGroup variant="text">
                                         <Button 
                                             onClick={this.handleEdit.bind(this, transaction)}
-                                            style={{marginTop: 5, backgroundColor: 'transparent', border: 'none'}}>
+                                            style={{backgroundColor: 'transparent', border: 'none'}}>
                                             <EditIcon color="primary" fontSize="small"/></Button>
                                         <Button
                                             onClick={handleDelete}
-                                            style={{marginTop: 5, backgroundColor: 'transparent', border: 'none'}}>
+                                            style={{backgroundColor: 'transparent', border: 'none'}}>
                                             <DeleteIcon color="secondary" fontSize="small"/></Button>
                                     </ButtonGroup>
                                 </td>

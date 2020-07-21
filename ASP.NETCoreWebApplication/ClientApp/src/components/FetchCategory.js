@@ -48,11 +48,9 @@ export class FetchCategory extends Component {
     }
 
     async populateCategory() {
-        console.log("props: ", this.props);
         const params = this.props.location.state;
         const response = await fetch('category?parent_cat=' + params.pid);
         const data = await response.json();
-        console.log(data);
         this.setState({ categories: data, loading: false, parent : params.pName });
     }
 }

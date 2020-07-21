@@ -61,7 +61,6 @@ export class FetchEvent extends Component {
         if (params == null) response = await fetch('event');
         else response = await fetch('event?category=' + params.cid);
         const data = await response.json();
-        console.log("data is ", data)
         this.setState({ events: data, loading: false, pName : params.pName, cName: params.cName });
     }
 }

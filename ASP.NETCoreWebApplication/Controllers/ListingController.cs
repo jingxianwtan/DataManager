@@ -23,7 +23,7 @@ namespace ASP.NETCoreWebApplication.Controllers
             }
             else
             {
-                return new List<Listing>();
+                throw new InvalidOperationException("This event ID doesn't exist");
             }
         }
 
